@@ -1,0 +1,27 @@
+name: Handoff Freshness Check
+on:
+  schedule:
+    - cron: '0 12 * * *' # noon UTC daily
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check HANDOFF.md freshness
+        run: |
+          last_modified=$(git log -1 --format="%ct" -- HANDOFF.md)
+          now=$(date +%s)
+          hours_ago=$(( (now - last_modified) / 3600 ))
+          echo "HANDOFF.md last updated ${hours_ago}h ago"
+          if [ "$hours_ago" -gt 36 ]; then
+            gh issue create \
+              --title "Handoff log stale - ${hours_ago}h since last update" \
+              --body "HANDOFF.md has not been updated in ${hours_ago} hours. Please update after your next work session." \
+              --label "process"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

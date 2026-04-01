@@ -713,6 +713,177 @@ npm start
 
 ---
 
+## 第十一章：跨时区协作机制（Follow the Sun）
+
+Jerry 在亚洲（UTC+8），David 在北美（UTC-5 ~ UTC-8）。时差 12-16 小时。这不是劣势——如果交接做得好，等于 **24 小时不间断开发**。Jerry 下班时 David 刚上班，David 下班时 Jerry 刚上班。
+
+核心原则：**零会议异步协作**。所有上下文通过文件传递，不靠口头沟通。目标是每周不超过 1 次同步通话。
+
+### 11.1 HANDOFF.md — 每日交接文件
+
+仓库根目录有一个 `HANDOFF.md` 文件，它是**滚动更新的操作日志**，不是文档。每个人在结束工作时更新自己的部分，保留对方的部分不动。
+
+**文件结构：**
+
+```markdown
+# Compass Handoff
+
+> Last updated: 2026-04-02 23:45 UTC+8 by Jerry
+
+## Status: ON TRACK | BLOCKED | NEEDS DECISION
+
+## Current Sprint Focus
+本周目标的一句话描述。
+
+---
+
+## Jerry's Last Session (日期, 时区)
+
+### Done
+- 完成了什么（具体，可验证）
+
+### In Progress
+- 正在做什么，进度到哪里了
+- 阻塞点（如果有）
+
+### For David
+1. **最高优先：** 具体任务描述（不是"做 UI"，而是"实现任务卡片点击弹出 modal，参考 Linear 的 issue detail 面板"）
+2. **次优先：** ...
+3. **注意事项：** 特定文件的陷阱或变更
+
+### Open Questions
+- 需要讨论但不紧急的问题
+
+---
+
+## David's Last Session (日期, 时区)
+（同样结构）
+```
+
+**为什么这样设计：**
+
+- **"For David" / "For Jerry" 是核心** — 它回答"下一个人该做什么"。编号、有优先级、具体到可执行
+- **每个人覆盖自己的部分** — 意味着你总能同时看到：对方上次做了什么 + 给你留了什么任务
+- **Status 一行** — 一眼判断是否有阻塞。如果写了 BLOCKED，对方上班后第一件事处理
+- **不是追加日志** — 老的历史在 `git log HANDOFF.md` 里，这个文件永远只有最新状态，不超过 80 行
+- **Sprint Focus** — 让两个人对齐这周的目标，不需要开 standup
+
+### 11.2 每日节奏
+
+#### Jerry 下班前（约 23:00-00:00 UTC+8 = David 上午 10:00-11:00 EST）
+
+1. Push 所有 work-in-progress 分支（即使未完成也要推，防止代码只在本地）
+2. 为准备好的工作开 PR。如果需要 David review，标 `needs-review` label
+3. **更新 HANDOFF.md** — 填写 Done、In Progress、For David。Commit 并 push 到 main
+4. 如果有紧急阻塞，通过 Telegram 发消息给 David。否则 HANDOFF.md 就够了
+
+#### David 上班后（约 09:00 EST = Jerry 晚上 22:00 UTC+8）
+
+1. `git pull main`。**打开 HANDOFF.md** — 这就是你的 standup
+2. 看有没有标了 `needs-review` 的 PR。有的话前 30 分钟先 review
+3. 按 "For David" 列表的优先级顺序工作
+4. 下班前更新 HANDOFF.md（自己的部分），push
+
+#### 重叠窗口（可选的同步时间）
+
+Jerry 的上午 08:00-10:00 UTC+8 = David 的晚上 19:00-21:00 EST。这是唯一可能同时在线的窗口。仅在需要时使用（见 11.4 升级机制）。大多数天不需要。
+
+### 11.3 Git 工作流
+
+#### 分支命名
+
+```
+jerry/<功能>     例: jerry/kanban-dnd
+david/<功能>     例: david/ui-upgrade
+```
+
+用名字前缀防止冲突，一眼看出是谁的分支。
+
+#### PR 规范
+
+**标题格式：** `[区域] 简短描述`
+- `[ui] task card detail modal`
+- `[db] supabase client + migration setup`
+- `[infra] vercel deployment config`
+
+**PR 正文模板**（已配置在 `.github/PULL_REQUEST_TEMPLATE.md`）：
+
+```markdown
+## What （做了什么）
+## Why （为什么做）
+## How to Test （如何验证）
+## Screenshots （UI 变更必须附截图：手机 + 桌面）
+## Handoff Notes （交接备注）
+```
+
+#### 异步 Review 协议
+
+核心问题：David 开 PR 时 Jerry 在睡觉，PR 会空等 12 小时。解决方案——**信任制自合并 + 事后 review**：
+
+| 场景 | 操作 |
+|------|------|
+| 纯 UI 变更、增量功能、有自信 | **自行合并**。在 HANDOFF.md 里注明合了什么 |
+| 结构性变更：schema 改动、auth 逻辑、middleware、共享工具 | 标 `needs-review`，在 HANDOFF.md "For [name]" 中注明。**不要自行合并** |
+| PR 评论来回超过 3 轮无法解决 | 升级为 15 分钟同步通话 |
+
+**关键规则：**
+- PR 控制在 300 行以内。大 PR 会阻塞一个完整的时区周期
+- 永远不要 force push 到 main
+- Main 分支必须始终可部署
+
+#### 冲突预防
+
+两个人不要同时改同一个文件。HANDOFF.md 的 "For David" / "For Jerry" 部分隐式分配了工作区域。如果 Jerry 说"我在改 `kanban-board.tsx`"，David 就知道不要碰这个文件。
+
+### 11.4 升级机制：什么时候打破异步
+
+异步工作在以下情况下需要切换到同步（Telegram 通话或消息）：
+
+1. **HANDOFF.md 写了 `Status: BLOCKED`** — 阻塞点需要对方输入，不能自己解决
+2. **架构层面的分歧** — PR review 评论超过 3 轮没共识
+3. **共享状态损坏** — 数据库 migration 冲突、main 分支挂了、Vercel 部署失败且需要双方 debug
+4. **紧急外部 deadline** — Jerry 明天要给 board 演示，某功能没跑通
+5. **需求不清楚** — David 看了 "For David" 但真的不理解要做什么（这意味着 Jerry 的交接写得太模糊——需要改进流程）
+
+**升级渠道：** Telegram（通过 Cloud bot 或直接消息）。不用邮件，不用 GitHub Issues。Telegram 对紧急事项够及时。
+
+**目标：每周不超过 1 次同步通话。** 如果通话频率更高，说明 HANDOFF.md 的笔记不够详细。
+
+### 11.5 自动化工具
+
+#### GitHub Action：交接文件过期提醒
+
+已配置在 `.github/workflows/handoff-check.yml`。每天 UTC 中午检查一次，如果 HANDOFF.md 超过 36 小时没更新，自动创建一个 GitHub Issue 提醒。
+
+这抓的是"有人忘了更新交接日志"的场景。
+
+#### PR 模板
+
+已配置在 `.github/PULL_REQUEST_TEMPLATE.md`。每次开 PR 时自动填充模板，确保截图和交接备注不被遗漏。
+
+### 11.6 不用什么
+
+| 不用 | 原因 |
+|------|------|
+| Jira / Linear / Notion Board | 2 个人不需要重型项目管理工具。GitHub Issues + HANDOFF.md 够了 |
+| Slack / Discord | Telegram 已经在用，不增加沟通渠道 |
+| 每日 standup bot | HANDOFF.md 就是 standup，由人写的，有上下文 |
+| 复杂 CI/CD | Vercel 从 main 自动部署就够了 |
+
+### 11.7 总结：整个机制就是这些
+
+| 工件 | 说明 |
+|------|------|
+| `HANDOFF.md` | 仓库根目录，每日滚动更新的交接日志 |
+| `.github/PULL_REQUEST_TEMPLATE.md` | PR 模板，确保截图和交接备注 |
+| `.github/workflows/handoff-check.yml` | 过期提醒，36h 未更新自动创建 Issue |
+| 分支前缀 `jerry/` `david/` | 防止冲突，一眼看出是谁的 |
+| Telegram | 仅紧急升级用 |
+
+**五个工件，零会议，最小开销。**
+
+---
+
 ## 附录：关键设计约束提醒
 
 1. **葛总只用手机** — 这不是"也要支持移动端"，而是"移动端是主要使用场景"。每个设计决策都要先想手机上怎么用。

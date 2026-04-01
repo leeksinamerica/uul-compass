@@ -1,0 +1,14 @@
+{
+  "pdf_options": {
+    "format": "A4",
+    "margin": {
+      "top": "30mm",
+      "bottom": "25mm",
+      "left": "20mm",
+      "right": "20mm"
+    },
+    "printBackground": true
+  },
+  "stylesheet": "docs/style.css",
+  "body_class": "markdown-body"
+}
