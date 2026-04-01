@@ -1,0 +1,287 @@
+import { pgEnum } from "drizzle-orm/pg-core";
+
+// ─── Organization ───────────────────────────────────────────────
+export const userRoleEnum = pgEnum("user_role", [
+  "owner",
+  "board",
+  "executive",
+  "department_head",
+  "manager",
+  "operator",
+  "sales",
+  "finance",
+  "compliance",
+  "viewer",
+]);
+
+export const contactTypeEnum = pgEnum("contact_type", [
+  "customer",
+  "carrier",
+  "partner",
+  "advisor",
+  "vendor",
+  "customs_broker",
+  "agent",
+  "other",
+]);
+
+// ─── Customer & CRM ────────────────────────────────────────────
+export const industryEnum = pgEnum("industry", [
+  "ai_infrastructure",
+  "renewable_energy",
+  "advanced_manufacturing",
+  "automotive",
+  "electronics",
+  "consumer_goods",
+  "pharma",
+  "chemicals",
+  "agriculture",
+  "construction",
+  "food_beverage",
+  "other",
+]);
+
+export const customerStatusEnum = pgEnum("customer_status", [
+  "prospect",
+  "active",
+  "inactive",
+  "suspended",
+  "churned",
+]);
+
+export const pipelineStageEnum = pgEnum("pipeline_stage", [
+  "prospect",
+  "qualified",
+  "proposal",
+  "negotiation",
+  "won",
+  "lost",
+]);
+
+// ─── Carrier ────────────────────────────────────────────────────
+export const carrierTypeEnum = pgEnum("carrier_type", [
+  "ocean",
+  "air",
+  "trucking",
+  "drayage",
+  "rail",
+  "nvocc",
+  "courier",
+  "multi_modal",
+]);
+
+export const contractStatusEnum = pgEnum("contract_status", [
+  "draft",
+  "active",
+  "expired",
+  "terminated",
+]);
+
+// ─── Transport ──────────────────────────────────────────────────
+export const transportModeEnum = pgEnum("transport_mode", [
+  "ocean_fcl",
+  "ocean_lcl",
+  "air",
+  "trucking_ftl",
+  "trucking_ltl",
+  "drayage",
+  "rail",
+  "courier",
+  "multi_modal",
+]);
+
+export const containerTypeEnum = pgEnum("container_type", [
+  "20GP",
+  "40GP",
+  "40HC",
+  "45HC",
+  "20RF",
+  "40RF",
+  "20OT",
+  "40OT",
+  "20FR",
+  "40FR",
+  "20TK",
+  "LCL",
+]);
+
+export const rateUnitEnum = pgEnum("rate_unit", [
+  "per_container",
+  "per_cbm",
+  "per_kg",
+  "per_cwt",
+  "per_mile",
+  "per_shipment",
+  "flat",
+  "per_pallet",
+]);
+
+export const chargeCategoryEnum = pgEnum("charge_category", [
+  "origin",
+  "freight",
+  "destination",
+  "customs",
+  "insurance",
+  "trucking",
+  "warehousing",
+  "other",
+]);
+
+// ─── Quotation ──────────────────────────────────────────────────
+export const incotermEnum = pgEnum("incoterm", [
+  "EXW",
+  "FCA",
+  "FAS",
+  "FOB",
+  "CFR",
+  "CIF",
+  "CPT",
+  "CIP",
+  "DAP",
+  "DPU",
+  "DDP",
+]);
+
+export const rfqStatusEnum = pgEnum("rfq_status", [
+  "received",
+  "in_progress",
+  "quoted",
+  "expired",
+  "cancelled",
+]);
+
+export const quoteStatusEnum = pgEnum("quote_status", [
+  "draft",
+  "pending_approval",
+  "approved",
+  "sent",
+  "accepted",
+  "rejected",
+  "expired",
+  "superseded",
+]);
+
+// ─── Shipment ───────────────────────────────────────────────────
+export const directionEnum = pgEnum("direction", [
+  "import",
+  "export",
+  "domestic",
+  "cross_trade",
+]);
+
+export const shipmentStatusEnum = pgEnum("shipment_status", [
+  "draft",
+  "booked",
+  "confirmed",
+  "in_transit_origin",
+  "at_origin_port",
+  "departed",
+  "in_transit",
+  "arrived",
+  "customs_hold",
+  "customs_cleared",
+  "in_delivery",
+  "delivered",
+  "completed",
+  "cancelled",
+  "on_hold",
+]);
+
+export const blTypeEnum = pgEnum("bl_type", [
+  "original",
+  "telex_release",
+  "seaway_bill",
+  "express",
+]);
+
+export const exceptionTypeEnum = pgEnum("exception_type", [
+  "delay",
+  "customs_hold",
+  "damage",
+  "shortage",
+  "documentation",
+  "carrier_issue",
+  "weather",
+  "port_congestion",
+  "demurrage",
+  "detention",
+  "other",
+]);
+
+// ─── Finance ────────────────────────────────────────────────────
+export const invoiceStatusEnum = pgEnum("invoice_status", [
+  "draft",
+  "sent",
+  "partially_paid",
+  "paid",
+  "overdue",
+  "void",
+  "disputed",
+]);
+
+// ─── Customs ────────────────────────────────────────────────────
+export const customsStatusEnum = pgEnum("customs_status", [
+  "pending",
+  "filed",
+  "under_review",
+  "hold",
+  "cleared",
+  "liquidated",
+  "protest",
+]);
+
+// ─── Documents ──────────────────────────────────────────────────
+export const documentTypeEnum = pgEnum("document_type", [
+  "bill_of_lading",
+  "airway_bill",
+  "commercial_invoice",
+  "packing_list",
+  "certificate_of_origin",
+  "customs_entry",
+  "isf",
+  "arrival_notice",
+  "delivery_order",
+  "pod",
+  "cargo_insurance",
+  "letter_of_credit",
+  "booking_confirmation",
+  "carrier_invoice",
+  "contract",
+  "sop",
+  "rate_sheet",
+  "correspondence",
+  "photo",
+  "other",
+]);
+
+// ─── PMI ────────────────────────────────────────────────────────
+export const pmiStatusEnum = pgEnum("pmi_status", [
+  "not_started",
+  "in_progress",
+  "at_risk",
+  "completed",
+  "blocked",
+]);
+
+export const taskStatusEnum = pgEnum("task_status", [
+  "todo",
+  "in_progress",
+  "blocked",
+  "review",
+  "done",
+]);
+
+export const taskPriorityEnum = pgEnum("task_priority", [
+  "critical",
+  "high",
+  "medium",
+  "low",
+]);
+
+// ─── Action Items ───────────────────────────────────────────────
+export const actionItemStatusEnum = pgEnum("action_item_status", [
+  "open",
+  "done",
+  "overdue",
+  "cancelled",
+]);
