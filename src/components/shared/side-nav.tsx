@@ -8,7 +8,7 @@ const navItems = [
   { label: "Plan", icon: "event_note", href: "/plan" },
   { label: "My Tasks", icon: "assignment_turned_in", href: "/my-tasks" },
   { label: "Risks", icon: "warning", href: "/risks" },
-  { label: "Value Gains", icon: "insights", href: "/value-gains" },
+  { label: "Growth", icon: "insights", href: "/value-gains" },
 ];
 
 const systemItems = [

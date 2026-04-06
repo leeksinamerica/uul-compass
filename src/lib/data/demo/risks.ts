@@ -11,6 +11,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Jason Likens", initials: "JL" },
     targetDate: "Apr 30",
     workstream: "Sales",
+    linkedTaskIds: ["o9", "s1", "s4"],
   },
   {
     id: "r2",
@@ -22,6 +23,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Alic Ge", initials: "AG" },
     targetDate: "Apr 14",
     workstream: "Operations",
+    linkedTaskIds: ["o2", "h3", "h7"],
   },
   {
     id: "r3",
@@ -33,6 +35,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Jerry Shi", initials: "JS" },
     targetDate: "May 30",
     workstream: "Operations",
+    linkedTaskIds: ["o17"],
   },
   {
     id: "r4",
@@ -44,6 +47,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Jerry Shi", initials: "JS" },
     targetDate: "May 15",
     workstream: "Operations",
+    linkedTaskIds: ["o12", "o14"],
   },
   {
     id: "r5",
@@ -55,6 +59,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "David Wu", initials: "DW" },
     targetDate: "May 30",
     workstream: "Technology & AI",
+    linkedTaskIds: ["t2", "t5"],
   },
   {
     id: "r6",
@@ -66,6 +71,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Serena Lin", initials: "SL" },
     targetDate: "Apr 30",
     workstream: "Finance",
+    linkedTaskIds: ["f1", "f2", "f4", "f8"],
   },
   {
     id: "r7",
@@ -77,6 +83,7 @@ export const demoRisks: RiskData[] = [
     owner: { name: "Jerry Shi", initials: "JS" },
     targetDate: "Apr 21",
     workstream: "Organization & HR",
+    linkedTaskIds: ["h6", "h8"],
   },
   {
     id: "r8",
@@ -88,5 +95,6 @@ export const demoRisks: RiskData[] = [
     owner: { name: "David Wu", initials: "DW" },
     targetDate: "Apr 21",
     workstream: "Technology & AI",
+    linkedTaskIds: ["t1", "t7"],
   },
 ];

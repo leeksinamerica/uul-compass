@@ -89,6 +89,20 @@ export function getAllMetrics() {
   return demoAllMetrics;
 }
 
+export function getTasksForRisk(riskId: string) {
+  const risk = demoRisks.find((r) => r.id === riskId);
+  if (!risk) return [];
+  return demoTasks.filter((t) => risk.linkedTaskIds.includes(t.id));
+}
+
+export function getLinkedTasksMap() {
+  const map: Record<string, typeof demoTasks> = {};
+  for (const risk of demoRisks) {
+    map[risk.id] = demoTasks.filter((t) => risk.linkedTaskIds.includes(t.id));
+  }
+  return map;
+}
+
 export function getFinancialPulse() {
   return demoFinancialPulse;
 }

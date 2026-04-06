@@ -8,7 +8,7 @@ const items = [
   { label: "Plan", icon: "map", href: "/plan" },
   { label: "Tasks", icon: "task_alt", href: "/my-tasks" },
   { label: "Risks", icon: "report_problem", href: "/risks" },
-  { label: "Settings", icon: "settings", href: "/settings" },
+  { label: "Growth", icon: "insights", href: "/value-gains" },
 ];
 
 export function BottomNav() {
