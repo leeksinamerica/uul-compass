@@ -25,6 +25,10 @@ import { demoPhases, demoGates } from "./demo/phases";
 import { demoRisks } from "./demo/risks";
 import { demoValueInitiatives, demoValueSnapshots } from "./demo/value-gains";
 import { demoScorecard, demoPillarScorecard, demoAllMetrics, demoFinancialPulse } from "./demo/metrics";
+import {
+  demoVerticals, demoReps, demoAlerts, demoPipelineStages,
+  demoVelocityTrends, demoForecast, demoActivityHeatmap, demoSalesKPIs,
+} from "./demo/sales";
 import { compassConfig } from "./config";
 
 // ─── Getters ───────────────────────────────────────────────────
@@ -105,6 +109,19 @@ export function getLinkedTasksMap() {
 
 export function getFinancialPulse() {
   return demoFinancialPulse;
+}
+
+export function getSalesData() {
+  return {
+    verticals: demoVerticals,
+    reps: demoReps,
+    alerts: demoAlerts,
+    pipelineStages: demoPipelineStages,
+    velocityTrends: demoVelocityTrends,
+    forecast: demoForecast,
+    activityHeatmap: demoActivityHeatmap,
+    kpis: demoSalesKPIs,
+  };
 }
 
 // Tasks due within the next 7 days from current day position
